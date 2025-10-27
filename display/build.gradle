@@ -1,0 +1,14 @@
+plugins {
+    id 'java'
+}
+
+dependencies {
+    implementation 'com.fazecast:jSerialComm:2.10.4'
+}
+
+tasks.named('jar') {
+    archiveFileName = 'temperature-display.jar'
+    manifest {
+        attributes 'Main-Class': 'temperatur.messer.display.TemperatureDisplay'
+    }
+}
