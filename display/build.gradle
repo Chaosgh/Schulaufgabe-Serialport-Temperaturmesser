@@ -2,8 +2,18 @@ plugins {
     id 'java'
 }
 
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
 dependencies {
-    implementation 'com.fazecast:jSerialComm:2.10.4'
+    implementation project(':common')
 }
 
 tasks.named('jar') {
@@ -11,4 +21,16 @@ tasks.named('jar') {
     manifest {
         attributes 'Main-Class': 'temperatur.messer.display.TemperatureDisplay'
     }
+}
+
+tasks.register('fatJar', Jar) {
+    archiveFileName = 'temperature-display-fat.jar'
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    manifest {
+        attributes 'Main-Class': 'temperatur.messer.display.TemperatureDisplay'
+    }
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    with tasks.named("jar").get()
 }
