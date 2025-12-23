@@ -51,6 +51,13 @@ java -jar display/build/libs/temperature-display.jar COM3
 java -jar sensor/build/libs/temperature-sensor.jar COM4
 ```
 
+## COM Ports öffnen
+
+Da hier nur die schnittstelle simuliert wird und keine echten Geräte genutzt werden müssen die ports über Programme wie com0com mit COM pairs (standard COM 3 + COM 4) geöffnet werden damit eine Verbindung klappt
+
+
+
+
 ## Datenbank
 
 Anomalien werden in der Tabelle `anomalies` gespeichert.
