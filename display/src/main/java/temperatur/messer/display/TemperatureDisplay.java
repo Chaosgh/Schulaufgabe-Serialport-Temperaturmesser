@@ -1,23 +1,19 @@
 package temperatur.messer.display;
 
+import temperatur.messer.common.SerialConfig;
 import temperatur.messer.common.SerialPortLink;
 
 import java.io.IOException;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 
 public final class TemperatureDisplay {
 
-    private static final String PORT_NAME = "COM3";
-    private static final int BAUD_RATE = 9600;
-
-    private static final DateTimeFormatter FORMATTER =
-            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
     public static void main(String[] args) {
-        try (SerialPortLink serial = SerialPortLink.open(PORT_NAME, BAUD_RATE)) {
+        String portName = (args.length > 0) ? args[0] : SerialConfig.DEFAULT_PORT_DISPLAY;
+
+        try (SerialPortLink serial = SerialPortLink.open(portName, SerialConfig.BAUD_RATE)) {
             System.out.println("Display hört auf " + serial.getPortName());
             String line;
 
@@ -30,12 +26,12 @@ public final class TemperatureDisplay {
 
                 try {
                     long millis = Long.parseLong(parts[1]);
-                    double value = Double.parseDouble(parts[2].replace(',', '.'));
+                    double value = Double.parseDouble(parts[2]);
                     LocalDateTime time = Instant.ofEpochMilli(millis)
                             .atZone(ZoneId.systemDefault())
                             .toLocalDateTime();
 
-                    String formattedTime = time.format(FORMATTER);
+                    String formattedTime = time.format(SerialConfig.DATE_FORMATTER);
                     String formattedValue = String.format("%.2f", value);
 
                     System.out.println("[" + formattedTime + "] Temperatur: " + formattedValue + " °C");
@@ -46,7 +42,7 @@ public final class TemperatureDisplay {
             }
 
         } catch (IOException e) {
-            System.err.println("Fehler beim Öffnen des Ports " + PORT_NAME + ": " + e.getMessage());
+            System.err.println("Fehler beim Öffnen des Ports " + portName + ": " + e.getMessage());
         }
     }
 }

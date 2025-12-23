@@ -1,36 +1,19 @@
 plugins {
-    id 'java'
-}
-
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
-    }
-}
-
-repositories {
-    mavenCentral()
+    id 'application'
+    id 'com.github.johnrengelman.shadow'
 }
 
 dependencies {
     implementation project(':common')
 }
 
-tasks.named('jar') {
-    archiveFileName = 'temperature-sensor.jar'
-    manifest {
-        attributes 'Main-Class': 'temperatur.messer.sensor.TemperatureSensorSimulator'
-    }
+application {
+    mainClass = 'temperatur.messer.sensor.TemperatureSensorSimulator'
 }
 
-tasks.register('fatJar', Jar) {
-    archiveFileName = 'temperature-sensor-fat.jar'
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-    manifest {
-        attributes 'Main-Class': 'temperatur.messer.sensor.TemperatureSensorSimulator'
-    }
-    from {
-        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
-    }
-    with tasks.named("jar").get()
+
+shadowJar {
+    archiveBaseName.set('temperature-sensor')
+    archiveClassifier.set('')
+    archiveVersion.set('')
 }

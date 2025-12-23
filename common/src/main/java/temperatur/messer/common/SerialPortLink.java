@@ -19,7 +19,8 @@ public final class SerialPortLink implements Closeable {
         SerialPort port = SerialPort.getCommPort(name);
         port.setComPortParameters(baud, 8, SerialPort.ONE_STOP_BIT, SerialPort.NO_PARITY);
         port.setComPortTimeouts(SerialPort.TIMEOUT_READ_BLOCKING, 1000, 0);
-        if (!port.openPort()) throw new IOException("Port konnte nicht geöffnet werden: " + name);
+        if (!port.openPort())
+            throw new IOException("Port konnte nicht geöffnet werden: " + name);
         return new SerialPortLink(port);
     }
 
@@ -41,9 +42,13 @@ public final class SerialPortLink implements Closeable {
     public void close() throws IOException {
         try {
             reader.close();
-            writer.close();
         } finally {
-            if (port.isOpen()) port.closePort();
+            try {
+                writer.close();
+            } finally {
+                if (port.isOpen())
+                    port.closePort();
+            }
         }
     }
 }

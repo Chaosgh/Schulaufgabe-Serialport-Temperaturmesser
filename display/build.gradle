@@ -1,36 +1,19 @@
 plugins {
-    id 'java'
-}
-
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
-    }
-}
-
-repositories {
-    mavenCentral()
+    id 'application'
+    id 'com.github.johnrengelman.shadow'
 }
 
 dependencies {
     implementation project(':common')
 }
 
-tasks.named('jar') {
-    archiveFileName = 'temperature-display.jar'
-    manifest {
-        attributes 'Main-Class': 'temperatur.messer.display.TemperatureDisplay'
-    }
+application {
+    mainClass = 'temperatur.messer.display.TemperatureDisplay'
 }
 
-tasks.register('fatJar', Jar) {
-    archiveFileName = 'temperature-display-fat.jar'
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-    manifest {
-        attributes 'Main-Class': 'temperatur.messer.display.TemperatureDisplay'
-    }
-    from {
-        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
-    }
-    with tasks.named("jar").get()
+
+shadowJar {
+    archiveBaseName.set('temperature-display')
+    archiveClassifier.set('')
+    archiveVersion.set('')
 }
