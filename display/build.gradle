@@ -5,6 +5,7 @@ plugins {
 
 dependencies {
     implementation project(':common')
+    implementation 'com.mysql:mysql-connector-j:8.1.0'
 }
 
 application {
